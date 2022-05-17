@@ -178,10 +178,10 @@ dishRouter.route('/:dishId/comments/:commentId')
     // res.end('Will send details of the dish: '+req.params.dishId+' to you!');
     Dishes.findById(req.params.dishId)
         .then((dish)=>{
-            if(dish!=null && dish.comments,id(req.params.commentId!=null)){
+            if(dish!=null && dish.comments.id(req.params.commentId)!=null){
                 res.statusCode=200;
                 res.setHeader('Content-Type','application/json');
-                res.json(dish.comments,id(req.params.commentId));
+                res.json(dish.comments.id(req.params.commentId));
             }
             else if(dish==null){
                 err=new Error('Dish '+req.params.dishId+' not found!');
@@ -200,13 +200,13 @@ dishRouter.route('/:dishId/comments/:commentId')
     // res.end('Deleting dish: '+req.params.dishId);
     Dishes.findById(req.params.dishId)
         .then((dish)=>{
-            if(dish!=null && dish.comments,id(req.params.commentId!=null)){
+            if(dish!=null && dish.comments.id(req.params.commentId)!=null){
                 dish.comments.id(req.params.commentId).remove();
             dish.save()
                 .then((dish)=>{
                     res.statusCode=200;
                     res.setHeader('Content-Type','application/json');
-                    req.json(dish);
+                    res.json(dish);
                 },(err)=>next(err));
             }
             else if(dish==null){
@@ -230,18 +230,18 @@ dishRouter.route('/:dishId/comments/:commentId')
 .put((req,res,next)=>{
     Dishes.findById(req.params.dishId)
         .then((dish)=>{
-            if(dish!=null && dish.comments,id(req.params.commentId!=null)){
+            if(dish!=null && dish.comments.id(req.params.commentId)!=null){
                 if(req.body.rating){
                     dish.comments.id(req.params.commentId).rating=req.body.rating;
                 }
                 if(req.body.comment){
-                    dish.comments.id(req.params.commentId).rating=req.body.comment;
+                    dish.comments.id(req.params.commentId).comment=req.body.comment;
                 }
                 dish.save()
                     .then((dish)=>{
                         res.statusCode=200;
                         res.setHeader('Content-Type','application/json');
-                        req.json(dish);
+                        res.json(dish);
                     }, (err)=>next(err));
             }
             else if(dish==null){
