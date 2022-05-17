@@ -92,6 +92,20 @@ dishRouter.route('/:dishId')
         .catch((err)=>next(err));
 });
 
+// dishRouter.post("/:dishId/comments", async (req, res) => {
+//     try {
+//       const note = await Dishes.findById(req.params.dishId);
+//       console.log(note.toJSON());
+//       note.comments.push(req.body);
+//       const savedNote = await note.save();
+  
+//       res.json(savedNote);
+//     } catch (error) {
+//       console.error(error.message);
+//       res.status(500).send("Internal Server Error");
+//     }
+//   });
+
 dishRouter.route('/:dishId/comments')
 .get((req,res,next)=>{
     Dishes.findById(req.params.dishId)
@@ -118,11 +132,11 @@ dishRouter.route('/:dishId/comments')
                     dish.comments.id(dish.comments[i]._id).remove();
                 }
                 dish.save()
-                    .then((dish)=>{
-                        res.statusCode=200;
-                        res.setHeader('Content-Type','application/json');
-                        req.json(dish);
-                    },(err)=>next(err));
+                    .then((dish) => {
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(dish);                
+                    }, (err) => next(err));
             }
             else{
                 err=new Error('Dish '+req.params.dishId+' not found!');
@@ -133,29 +147,23 @@ dishRouter.route('/:dishId/comments')
         .catch((err)=>next(err));
 })
 .post((req,res,next)=>{
-    // res.end('Will add the dish: '+req.body.name+' with details: '+req.body.description);
+    // console.log("Will add the comment "+req.body);
     Dishes.findById(req.params.dishId)
         .then((dish)=>{
-            try{
-                if(dish!=null){
-                res.statusCode=200;
-                res.setHeader('Content-Type','application/json');
+            if(dish!=null){
+                console.log(dish.toJSON());
                 dish.comments.unshift(req.body);
                 dish.save()
                     .then((dish)=>{
                         res.statusCode=200;
                         res.setHeader('Content-Type','application/json');
-                        req.json(dish);
+                        res.json(dish);
                     }, (err)=>next(err));
-                }
-                else{
-                    err=new Error('Dish '+req.params.dishId+' not found!');
-                    err.status=404;
-                    return next(err);
-                }
             }
-            catch(error){
-                console.log(error.message);
+            else{
+                err=new Error('Dish '+req.params.dishId+' not found!');
+                err.status=404;
+                return next(err);
             }
         },(err)=>next(err))
         .catch((err)=>next(err));

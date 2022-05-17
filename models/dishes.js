@@ -20,6 +20,7 @@ const commentSchema=new Schema({
     }
 },{
     timestamps: true
+    // usePushEach: true
 });
 
 const dishSchema=new Schema({
@@ -56,6 +57,7 @@ const dishSchema=new Schema({
     comments: [commentSchema]
 },{
     timestamps: true
+    // usePushEach: true
 });
 
 var Dishes=mongoose.model('Dish',dishSchema);
