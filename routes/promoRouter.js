@@ -1,6 +1,7 @@
 const express=require('express');
 const bodyParser=require('body-parser');
 const mongoose=require('mongoose');
+const authenticate=require('../authenticate');
 
 const Promotions=require('../models/promotions');
 
@@ -24,7 +25,7 @@ promoRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.delete((req,res,next)=>{
+.delete(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Deleting all the promotions!');
     Promotions.remove({})
         .then((promotions)=>{
@@ -34,7 +35,7 @@ promoRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.post((req,res,next)=>{
+.post(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Will add the promotion: '+req.body.name+' with details: '+req.body.description);
     Promotions.create(req.body)
         .then((promotions)=>{
@@ -45,7 +46,7 @@ promoRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.put((req,res,next)=>{
+.put(authenticate.verifyUser, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /promotions');
 });
@@ -62,7 +63,7 @@ promoRouter.route('/:promoId')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.delete((req,res,next)=>{
+.delete(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Deleting promotion: '+req.params.promoId);
     Promotions.findByIdAndRemove(req.params.promoId)
         .then((resp)=>{
@@ -72,11 +73,11 @@ promoRouter.route('/:promoId')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.post((req,res,next)=>{
+.post(authenticate.verifyUser, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /promotions/'+req.params.promoId);
 })
-.put((req,res,next)=>{
+.put(authenticate.verifyUser, (req,res,next)=>{
     // res.write('Updating the promotion: '+req.params.promoId+'\n');
     // res.end('Will update the promotion: '+req.body.name+' with details: '+req.body.description);
     Promotions.findByIdAndUpdate(req.params.promoId, {

@@ -1,6 +1,7 @@
 const express=require('express');
 const bodyParser=require('body-parser');
 const mongoose=require('mongoose');
+const authenticate=require('../authenticate');
 
 const Leaders=require('../models/leaders');
 
@@ -24,7 +25,7 @@ leaderRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.delete((req,res,next)=>{
+.delete(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Deleting all the leaders!');
     Leaders.remove({})
         .then((leaders)=>{
@@ -34,7 +35,7 @@ leaderRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.post((req,res,next)=>{
+.post(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Will add the leader: '+req.body.name+' with details: '+req.body.description);
     Leaders.create(req.body)
         .then((leaders)=>{
@@ -45,7 +46,7 @@ leaderRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.put((req,res,next)=>{
+.put(authenticate.verifyUser, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /leaders');
 });
@@ -61,7 +62,7 @@ leaderRouter.route('/:leaderId')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.delete((req,res,next)=>{
+.delete(authenticate.verifyUser, (req,res,next)=>{
     // res.end('Deleting leader: '+req.params.leaderId);
     Leaders.findByIdAndRemove(req.params.leaderId)
         .then((leaders)=>{
@@ -71,11 +72,11 @@ leaderRouter.route('/:leaderId')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.post((req,res,next)=>{
+.post(authenticate.verifyUser, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /leaders/'+req.params.leaderId);
 })
-.put((req,res,next)=>{
+.put(authenticate.verifyUser, (req,res,next)=>{
     // res.write('Updating the leader: '+req.params.leaderId+'\n');
     // res.end('Will update the leader: '+req.body.name+' with details: '+req.body.description);
     Leaders.findByIdAndUpdate(req.params.leaderId, {
