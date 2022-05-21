@@ -25,7 +25,7 @@ promoRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.delete(authenticate.verifyUser, (req,res,next)=>{
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('Deleting all the promotions!');
     Promotions.remove({})
         .then((promotions)=>{
@@ -35,7 +35,7 @@ promoRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.post(authenticate.verifyUser, (req,res,next)=>{
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('Will add the promotion: '+req.body.name+' with details: '+req.body.description);
     Promotions.create(req.body)
         .then((promotions)=>{
@@ -46,7 +46,7 @@ promoRouter.route('/')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.put(authenticate.verifyUser, (req,res,next)=>{
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('PUT operation not supported on /promotions');
 });
@@ -63,7 +63,7 @@ promoRouter.route('/:promoId')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.delete(authenticate.verifyUser, (req,res,next)=>{
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.end('Deleting promotion: '+req.params.promoId);
     Promotions.findByIdAndRemove(req.params.promoId)
         .then((resp)=>{
@@ -73,11 +73,11 @@ promoRouter.route('/:promoId')
         }, (err)=>next(err))
         .catch((err)=>next(err));
 })
-.post(authenticate.verifyUser, (req,res,next)=>{
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     res.statusCode=403;
     res.end('POST operation not supported on /promotions/'+req.params.promoId);
 })
-.put(authenticate.verifyUser, (req,res,next)=>{
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=>{
     // res.write('Updating the promotion: '+req.params.promoId+'\n');
     // res.end('Will update the promotion: '+req.body.name+' with details: '+req.body.description);
     Promotions.findByIdAndUpdate(req.params.promoId, {
